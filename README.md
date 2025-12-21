@@ -22,3 +22,8 @@
 4. Leaderboard page
    - Export CSV
    - Show list user
+
+### API
+
+- get API category: [https://opentdb.com/api_category.php]
+- get question API: [https://opentdb.com/api.php?amount=2&category=13&difficulty=medium&type=multiple]

@@ -1,19 +1,53 @@
+import React from "react";
+
 import {
   Box,
   Button,
   Container,
   FormControl,
+  FormHelperText,
   InputLabel,
   MenuItem,
   Select,
   TextField,
   Typography,
 } from "@mui/material";
+import { Controller, useForm } from "react-hook-form";
 
-// get API category: https://opentdb.com/api_category.php
-// get question API: https://opentdb.com/api.php?amount=2&category=13&difficulty=medium&type=multiple
+import type { ICategory, IForm } from "../types";
+import { useNavigate } from "react-router-dom";
 
 function Dashboard() {
+  const navigate = useNavigate();
+  const { handleSubmit, control, reset } = useForm<IForm>({
+    defaultValues: {
+      category: "",
+      difficulty: "",
+      type: "",
+      amount: 0,
+    },
+  });
+  const [categories, setCategories] = React.useState<ICategory[]>([]);
+
+  React.useEffect(() => {
+    async function fetchCategory() {
+      try {
+        const res = await fetch("https://opentdb.com/api_category.php");
+        const data = await res.json();
+        setCategories(data.trivia_categories || []);
+      } catch (e) {
+        console.log("fail fetch category", e);
+      }
+    }
+    fetchCategory();
+  }, []);
+
+  const onSubmit = (data: IForm) => {
+    console.log(data);
+    navigate("/question");
+    reset();
+  };
+
   return (
     <>
       <Container maxWidth="xl">
@@ -27,43 +61,99 @@ function Dashboard() {
             alignItems: "center",
             gap: "30px",
             borderRadius: "15px",
+            position: "relative",
           }}
         >
-          <Typography variant="h5" marginTop={"50px"} marginBottom={"15px"} fontWeight={800} color="green">
+          <Typography variant="h5" marginTop={"50px"} fontWeight={800} color="green">
             Question Dash Board
           </Typography>
 
-          <FormControl sx={{ width: "900px" }}>
-            <InputLabel id="category">Category</InputLabel>
-            <Select labelId="demo-simple-select-label" id="category" label="Category">
-              <MenuItem value={10}>Ten</MenuItem>
-              <MenuItem value={20}>Twenty</MenuItem>
-              <MenuItem value={30}>Thirty</MenuItem>
-            </Select>
-          </FormControl>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[20px] items-center w-[60vw]! mx-10!">
+            <Controller
+              name="category"
+              control={control}
+              rules={{ required: "Please select a category!!!" }}
+              render={({ field, fieldState }) => (
+                <FormControl sx={{ width: "100%" }} error={!!fieldState.error}>
+                  <InputLabel id="category">Category</InputLabel>
+                  <Select {...field} labelId="category" label="Category">
+                    {categories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
 
-          <FormControl sx={{ width: "900px" }}>
-            <InputLabel id="dfficulty">Difficulty</InputLabel>
-            <Select labelId="demo-simple-select-label" id="difficulty" label="Difficulty">
-              <MenuItem value={10}>Easy</MenuItem>
-              <MenuItem value={20}>Medium</MenuItem>
-              <MenuItem value={30}>Hard</MenuItem>
-            </Select>
-          </FormControl>
+                  <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
 
-          <FormControl sx={{ width: "900px" }}>
-            <InputLabel id="type">Type</InputLabel>
-            <Select labelId="demo-simple-select-label" id="type" label="Type">
-              <MenuItem value="multiple">Multiple Choice</MenuItem>
-              <MenuItem value="boolean">True/False</MenuItem>
-            </Select>
-          </FormControl>
+            <Controller
+              name="difficulty"
+              control={control}
+              rules={{ required: "Please select a difficulty!!!" }}
+              render={({ field, fieldState }) => (
+                <FormControl sx={{ width: "100%" }} error={!!fieldState.error}>
+                  <InputLabel id="difficulty">Difficulty</InputLabel>
+                  <Select {...field} labelId="difficulty" label="Difficulty">
+                    <MenuItem value="easy">Easy</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="hard">Hard</MenuItem>
+                  </Select>
 
-          <TextField id="outlined-basic" label="Amount of Question" variant="outlined" sx={{ width: "900px" }} />
+                  <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
 
-          <Button variant="contained" color="success">
-            Get Started
-          </Button>
+            <Controller
+              name="type"
+              control={control}
+              rules={{ required: "Please select a type!!!" }}
+              render={({ field, fieldState }) => (
+                <FormControl sx={{ width: "100%" }} error={!!fieldState.error}>
+                  <InputLabel id="type">Type</InputLabel>
+                  <Select {...field} labelId="type" label="Type">
+                    <MenuItem value="multiple">Multiple Choice</MenuItem>
+                    <MenuItem value="boolean">True/False</MenuItem>
+                  </Select>
+
+                  <FormHelperText>{fieldState.error?.message}</FormHelperText>
+                </FormControl>
+              )}
+            />
+
+            <Controller
+              name="amount"
+              control={control}
+              rules={{
+                required: "Please enter amount!!!",
+                min: { value: 1, message: "Value must be at least 1" },
+                validate: (value) => !Number.isNaN(value) || "Amount should be a number",
+              }}
+              render={({ field, fieldState }) => (
+                <TextField
+                  sx={{ width: "100%" }}
+                  {...field}
+                  type="text"
+                  label="Amount of Question"
+                  error={!!fieldState.error}
+                  helperText={fieldState.error?.message}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  onFocus={() => {
+                    if (field.value === 0) {
+                      field.onChange("");
+                    }
+                  }}
+                />
+              )}
+            />
+
+            <Button variant="contained" color="success" type="submit" className="w-[180px] absolute! bottom-10">
+              Get Started
+            </Button>
+          </form>
         </Box>
       </Container>
     </>
