@@ -9,3 +9,12 @@ export interface IForm {
   type: "multiple" | "boolean" | "";
   amount: number;
 }
+
+export interface IAction {
+  type: string;
+  payload?: any;
+}
+
+export interface IStore {
+  question: IForm;
+}

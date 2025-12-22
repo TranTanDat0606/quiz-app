@@ -1,4 +1,6 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 import {
   Box,
@@ -12,13 +14,15 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+
 import { Controller, useForm } from "react-hook-form";
 
 import type { ICategory, IForm } from "../types";
-import { useNavigate } from "react-router-dom";
+import { updateFormQuestion } from "../redux/question.actions";
 
 function Dashboard() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { handleSubmit, control, reset } = useForm<IForm>({
     defaultValues: {
       category: "",
@@ -43,7 +47,7 @@ function Dashboard() {
   }, []);
 
   const onSubmit = (data: IForm) => {
-    console.log(data);
+    dispatch(updateFormQuestion(data));
     navigate("/question");
     reset();
   };
@@ -53,18 +57,15 @@ function Dashboard() {
       <Container maxWidth="xl">
         <Box
           sx={{
-            bgcolor: "#fff",
-            height: "77vh",
             display: "flex",
             flexDirection: "column",
             justifyContent: "flex-start",
             alignItems: "center",
             gap: "30px",
             borderRadius: "15px",
-            position: "relative",
           }}
         >
-          <Typography variant="h5" marginTop={"50px"} fontWeight={800} color="green">
+          <Typography variant="h5" marginTop={"30px"} fontWeight={800} color="green">
             Question Dash Board
           </Typography>
 
