@@ -20,9 +20,12 @@ import { Controller, useForm } from "react-hook-form";
 import type { ICategory, IForm } from "../types";
 import { updateFormQuestion } from "../redux/question.actions";
 
+import { ToastContainer, toast } from "react-toastify";
+
 function Dashboard() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const { handleSubmit, control, reset } = useForm<IForm>({
     defaultValues: {
       category: "",
@@ -48,7 +51,12 @@ function Dashboard() {
 
   const onSubmit = (data: IForm) => {
     dispatch(updateFormQuestion(data));
-    navigate("/question");
+
+    toast.success("Fetch Question Done!");
+
+    setTimeout(() => {
+      navigate("/question");
+    }, 3000);
     reset();
   };
 
@@ -157,6 +165,19 @@ function Dashboard() {
           </form>
         </Box>
       </Container>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover={false}
+        theme="light"
+      />
     </>
   );
 }
