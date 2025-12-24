@@ -56,7 +56,7 @@ function Dashboard() {
 
     setTimeout(() => {
       navigate("/question");
-    }, 3000);
+    }, 2000);
     reset();
   };
 
@@ -69,7 +69,7 @@ function Dashboard() {
             flexDirection: "column",
             justifyContent: "flex-start",
             alignItems: "center",
-            gap: "30px",
+            gap: "50px",
             borderRadius: "15px",
           }}
         >
@@ -77,7 +77,7 @@ function Dashboard() {
             Question Dash Board
           </Typography>
 
-          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[20px] items-center w-[60vw]! mx-10!">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-[20px] items-center w-[700px] mx-10!">
             <Controller
               name="category"
               control={control}
@@ -168,7 +168,7 @@ function Dashboard() {
 
       <ToastContainer
         position="top-right"
-        autoClose={5000}
+        autoClose={1500}
         hideProgressBar={false}
         newestOnTop={false}
         closeOnClick={false}
