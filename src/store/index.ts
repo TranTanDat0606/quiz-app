@@ -4,6 +4,7 @@ import { usersReducer } from "../redux/user/users.reducer";
 
 const rootReducer = combineReducers({
   question: questionReducer,
+
   users: usersReducer,
 });
 
@@ -15,9 +16,6 @@ export const store = createStore(rootReducer);
     difficulty: "",
     type: "",
     amount: 0,
-  },
-  finalScore: {
-    score: 0,
   },
   user: [{
     firstName: "",

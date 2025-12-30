@@ -137,7 +137,8 @@ function Dashboard() {
             control={control}
             rules={{
               required: "Please enter amount!!!",
-              min: { value: 1, message: "Value must be at least 1" },
+              min: { value: 1, message: "The value must be at least 1" },
+              max: { value: 10, message: "The maximum value must be 10." },
               validate: (value) => !Number.isNaN(value) || "Amount should be a number",
             }}
             render={({ field, fieldState }) => (
