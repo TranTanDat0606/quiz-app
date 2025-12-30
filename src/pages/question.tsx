@@ -8,7 +8,6 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 
 import type { IDataSource, IStore } from "../types";
 import { updateFinalScore } from "../redux/question/question.actions";
-import Score from "../components/score";
 import { DIFFICULTY_TIMES } from "../config";
 import { formatTime } from "../utils/formatTIme";
 
@@ -16,6 +15,7 @@ const Question = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const question = useSelector((state: IStore) => state.question);
+  const score = useSelector((state: IStore) => state.question.score);
 
   const [questionIndex, setQuestionIndex] = React.useState(0);
   const [dataSource, setDataSource] = React.useState<IDataSource[]>([]);
@@ -172,7 +172,9 @@ const Question = () => {
                 color: progress <= 25 ? "red" : progress <= 50 ? "orange" : "green",
               }}
             />
-            <Score dataSource={dataSource} />
+            <Typography sx={{ position: "absolute", top: 68, left: 60, fontWeight: 500, fontSize: 45 }}>
+              {score}/{dataSource.length}
+            </Typography>
           </div>
         </div>
       </Box>

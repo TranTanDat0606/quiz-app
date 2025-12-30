@@ -14,7 +14,7 @@ import {
 import DescriptionIcon from "@mui/icons-material/Description";
 
 import { useSelector } from "react-redux";
-import type { IUser, IUserStore } from "../types";
+import type { IStore, IUser, IUserStore } from "../types";
 
 import { CSVLink } from "react-csv";
 import { toast, ToastContainer } from "react-toastify";
@@ -23,6 +23,9 @@ import Paper from "@mui/material/Paper";
 
 const Leaderboard = () => {
   const users = useSelector((state: IUserStore) => state.users);
+  const totalQuestion = useSelector((state: IStore) => state.question.amount);
+
+  console.log(totalQuestion, "aaaaaaa");
 
   return (
     <Container>
@@ -30,10 +33,7 @@ const Leaderboard = () => {
         sx={{
           display: "flex",
           flexDirection: "column",
-          justifyContent: "flex-start",
           alignItems: "center",
-          gap: "50px",
-          borderRadius: "15px",
         }}
       >
         <Typography variant="h4" marginTop={"35px"} fontWeight={800} color="green">
@@ -42,14 +42,7 @@ const Leaderboard = () => {
       </Box>
 
       <Box textAlign={"right"} marginTop={"35px"} marginBottom={"30px"}>
-        <CSVLink
-          data={users}
-          filename={generateFileName("User")}
-          // onClick={(event: any) => {
-          //   toast.success("You have successfully exported.");
-          //   return false;
-          // }}
-        >
+        <CSVLink data={users} filename={generateFileName("User")}>
           <Button
             variant="contained"
             sx={{ marginRight: 2 }}
@@ -72,19 +65,21 @@ const Leaderboard = () => {
         <Table aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Score</TableCell>
+              <TableCell align="center">First Name</TableCell>
+              <TableCell align="center">Last Name</TableCell>
+              <TableCell align="center">Email</TableCell>
+              <TableCell align="center">Score / Total Questions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {users.map((user: IUser, index: number) => (
               <TableRow key={index}>
-                <TableCell>{user.firstName}</TableCell>
-                <TableCell>{user.lastName}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.score}</TableCell>
+                <TableCell align="center">{user.firstName}</TableCell>
+                <TableCell align="center">{user.lastName}</TableCell>
+                <TableCell align="center">{user.email}</TableCell>
+                <TableCell align="center">
+                  {user.score} / {totalQuestion}
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
