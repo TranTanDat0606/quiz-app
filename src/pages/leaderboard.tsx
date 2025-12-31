@@ -25,8 +25,6 @@ const Leaderboard = () => {
   const users = useSelector((state: IUserStore) => state.users);
   const totalQuestion = useSelector((state: IStore) => state.question.amount);
 
-  console.log(totalQuestion, "aaaaaaa");
-
   return (
     <Container>
       <Box
